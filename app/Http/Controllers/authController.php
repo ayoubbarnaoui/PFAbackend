@@ -28,8 +28,8 @@ class authController extends Controller
             // 'password' => bcrypt($attrs['password']),
             // 'password' => Hash::make($request->password),
             // 'password' =>Hash::make($attrs['password']),
-            'password' => $attrs['password'],
-
+            // 'password' => $attrs['password'],
+            'password' => encrypt($attrs['password']),
         ]);
 
         //return admin & token in response
@@ -41,47 +41,42 @@ class authController extends Controller
     }
 
     public function loginAdmin(Request $request){
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|min:6'
-        ]);
-        $email=$request['email'];
-        $pass=$request['password'];
-
-        // $admin=Admin::where('email','like',"$email",'AND'
-        // ,'password','like',"$pass") -> first();
-        $admin=Admin::where(
-        'password','like',"$pass")->where('email','like',"$email") -> first();
-        // $admin=Admin::where('email','like',"$email") -> first();
-        // $pass1=Admin::select('password')->where('email', $email)->get();
-        // $verify=password_vertify($pass, $request['password']);
-        if($admin ){
-
-        $token = $admin->createToken('secret')->plainTextToken;
-        return response(['result'=>1 ,'admin' => $admin, 'token' => $token],200);
-        }else{
-            return response(['result'=>0]);
-            // return response()->json(['error'=>'Unauthorised'], 401);
-        }
-
-        //validate fields
-        // $attrs =$request->validate([
+        // $request->validate([
         //     'email' => 'required|email',
-        //     'password' => 'required|min:6',
-
+        //     'password' => 'required|min:6'
         // ]);
-        // $attrs =[
-        //     'email' => $request['email'],
-        //    'password'=> bcrypt($request['password']),
-        // ];
+        // $email=$request['email'];
+        // $pass=$request['password'];
 
-        // $attrs =[
-        //     'email' => $request->input('email'),
-        //     'password' => $request->input('password'),
+        // // $admin=Admin::where('email','like',"$email",'AND'
+        // // ,'password','like',"$pass") -> first();
+        // $admin=Admin::where(
+        // 'password','like',"$pass")->where('email','like',"$email") -> first();
+        // // $admin=Admin::where('email','like',"$email") -> first();
+        // // $pass1=Admin::select('password')->where('email', $email)->get();
+        // // $verify=password_vertify($pass, $request['password']);
+        // if($admin ){
 
-        // ];
-        //attempt login
-        // dd(Auth::attempt($attrs), Auth::check());
+        // $token = $admin->createToken('secret')->plainTextToken;
+        // return response(['result'=>1 ,'admin' => $admin, 'token' => $token],200);
+        // }else{
+        //     return response(['result'=>0]);
+        //     // return response()->json(['error'=>'Unauthorised'], 401);
+        // }
+
+        // validate fields
+        $attrs=$request->validate([
+            'email' => 'required|email',
+            'password' => 'required|min:6',
+
+        ]);
+        $admin = Admin::where('email',$request->email)->get()
+            ->first();
+            $pass = decrypt($admin->password);
+            if($admin && $pass==$request->password){
+        $token = $admin->createToken('secret')->plainTextToken;
+        return response(['admin' => $admin, 'token' => $token],200);
+            }
 
         // if(!Auth::attempt($attrs)){
         //     return response([
