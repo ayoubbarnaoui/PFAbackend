@@ -14,6 +14,7 @@ class Produit extends Model
         'prix',
         'image',
 
+
     ];
 
 
@@ -21,4 +22,10 @@ class Produit extends Model
     {
         return $this->belongsTo(Categorie::class,'id','categorie_id');//
     }
+
+    public function lignecommandes()
+    {
+        return $this->hasMany(LigneCommande::class,'produit_id','id');
+    }
+
 }

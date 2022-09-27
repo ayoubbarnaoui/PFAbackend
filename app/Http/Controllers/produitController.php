@@ -33,34 +33,48 @@ class produitController extends Controller
         $produit->image = $img_name;
         $produit->categorie_id = $rqst['categorie_id'];
         $produit->save();
-         return "produit add mazyan";
+        //  return "produit add mazyan";
 
        }
        public function updateProduit(Request $rqst){
 
         $produit = Produit::find($rqst->id);
-        $rqst->validate([
-            'nom'=>'required',
-            'description'=>'required',
-            'prix'=>'required',
-            'image'=>'required|image|mimes:jpg,bmp,png',
-            // 'categorie_id'=>'required',
-            ]
-        );
+        // $rqst->validate([
+        //     'nom'=>'required',
+        //     'description'=>'required',
+        //     'prix'=>'required',
+        //     'image'=>'required|image|mimes:jpg,bmp,png',
+        //     'categorie_id'=>'required',//
+        //     ]
+        // );
 
-        $updt = $rqst->all();
+        // $updt = $rqst->all();
 
         if ($rqst->hasFile('image')) {
             $img_name=time().'.'.$rqst->image->extension();
             $rqst->image->move(public_path('uploads/images/produits')
             ,$img_name);
-            $updt['image'] = $img_name;
+            // $updt['image'] = $img_name;
             File::delete('uploads/images/produits/'.$produit->image);
-            // return "image delete";
+            $produit->nom = $rqst->nom;
+            $produit->description = $rqst->description;
+            $produit->prix = $rqst->prix;
+            $produit->image = $img_name;
+            $produit->categorie_id = $rqst->categorie_id;
+            $produit->save();
+            // $produit->update($updt);
+        }
+        else{
+            $produit->nom = $rqst->nom;
+            $produit->description = $rqst->description;
+            $produit->prix = $rqst->prix;
+            $produit->categorie_id = $rqst->categorie_id;
+            $produit->save();
+            // $produit->update($updt);
+            // return $updt;
         }
 
-        $produit->update($updt);
-         return "produit update mazyan";
+        //  return "produit update mazyan";
 
        }
        public function allProduit(){
@@ -72,6 +86,12 @@ class produitController extends Controller
         $produit = Produit::find($id);
          File::delete('uploads/images/produits/'.$produit->image);
          $produit->delete();
-        return "delete mazyan";
+        // return "delete mazyan";
+       }
+       
+       public function getProduit($id){
+        $produit = Produit::find($id);
+        return response()->json($produit,200);
+        // return "delete mazyan";
        }
 }

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Administrateur;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Utilisateur;
 use Illuminate\Support\Facades\Validator;
 
 class userController extends Controller
@@ -75,6 +77,26 @@ class userController extends Controller
         $usr->update($input);
         // return "update mazyan" ;
        }
+
+       public function ajAdministrateur(Request $rq){
+        $rq->validate([
+            'nom'=>'required',
+            'adresse'=>'required',
+            ]
+        );
+        $admin = new Administrateur();
+        $admin->nom=$rq->nom;
+        $admin->save();
+
+        $usr = new Utilisateur();
+        $usr->adresse=$rq->adresse;
+        $usr->type='Admin';
+        $usr->save();
+
+        $admin->utilisateur()->save($usr );
+        return "tout est bien";
+       }
+
 
 
 }

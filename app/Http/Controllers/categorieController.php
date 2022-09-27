@@ -11,26 +11,27 @@ class categorieController extends Controller
     public function addCategorie(Request $rqst){
         $rqst->validate([
             'titre'=>'required',
-            'description'=>'required',
+            'description'=>'required|string',
             ]
         );
-        $category = new Categorie();
-        $category->titre = $rqst['titre'];
-        $category->description = $rqst['description'];
-        $category->save();
-         return "category add mazyan";
+        $categorie = new Categorie();
+        $categorie->titre = $rqst['titre'];
+        $categorie->description = $rqst['description'];
+        $categorie->save();
+         return response()->json($categorie,200);
        }
+
        public function updateCategorie(Request $rqst){
 
         $categorie = Categorie::find($rqst->id);
 
         $data = $rqst->all();
         $categorie->update($data);
-         return "category update mazyan";
+        //  return "category update mazyan";
        }
        public function deleteCategorie($id){
         $categorie = Categorie::find($id)->delete();
-        return "delete mazyan";
+        // return "delete mazyan";
        }
 
        public function allCategorie(){
@@ -44,6 +45,6 @@ class categorieController extends Controller
         $produits = Produit::where('categorie_id',$id)->get();
 
         return response()->json($produits,200);
-       }
+                }
 
 }

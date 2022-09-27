@@ -69,9 +69,9 @@ class authController extends Controller
                       kay3raf ri int w float w ...*/
                   $admin = Auth::user();
                   $admin->tokens()->delete();
-                  return response([
-                      'message' => 'logout success.'
-                  ],200);
+                //   return response([
+                //       'message' => 'logout success.'
+                //   ],200);
 
                   }
 }

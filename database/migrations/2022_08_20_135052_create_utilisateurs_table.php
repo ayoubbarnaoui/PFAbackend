@@ -13,10 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('categories', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('titre')->unique();
-            $table->string('description');
+        Schema::create('utilisateurs', function (Blueprint $table) {
+            $table->id();
+            // $table->string('nom');
+            $table->string('adresse');
+            $table->string('type');
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('utilisateurs');
     }
 };
